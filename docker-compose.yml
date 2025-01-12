@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  order-service:
+    build:
+      context: ../OrderService
+      dockerfile: Dockerfile
+    ports:
+      - "5001:80"
+    environment:
+      - ConnectionStrings__SqlServer=Server=sqlserver;Database=OrdersDb;User Id=sa;Password=Your_password123
+      - RabbitMQ__Host=rabbitmq
+
+  book-inventory-service:
+    build:
+      context: ../BookInventoryService
+      dockerfile: Dockerfile
+    ports:
+      - "5002:80"
+    environment:
+      - RabbitMQ__Host=rabbitmq
+
+  customer-service:
+    build:
+      context: ../CustomerService
+      dockerfile: Dockerfile
+    ports:
+      - "5003:80"
+    environment:
+      - RabbitMQ__Host=rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"

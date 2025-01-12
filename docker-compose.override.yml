@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  order-service:
+    build:
+      context: ./OrderService
+    ports:
+      - "5001:80"
+  book-inventory-service:
+    build:
+      context: ./BookInventoryService
+    ports:
+      - "5002:80"
+  customer-service:
+    build:
+      context: ./CustomerService
+    ports:
+      - "5003:80"
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
