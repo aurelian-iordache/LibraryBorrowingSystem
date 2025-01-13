@@ -8,6 +8,7 @@ namespace CommunicationShared
         public DateTime OrderDate { get; init; }
         public string Status { get; init; }
         public bool OrderConfirmed { get; init; }
+        public List<BookDto> Books { get; init; }
 
         // Parameterless constructor required by MassTransit
         public BookOrderCreatedEvent() { }
@@ -19,15 +20,20 @@ namespace CommunicationShared
             string customerName,
             DateTime orderDate,
             string status,
-            bool orderConfirmed)
+            List<BookDto> books)
         {
             OrderId = orderId;
             CustomerId = customerId;
             CustomerName = customerName;
             OrderDate = orderDate;
             Status = status;
-            OrderConfirmed = orderConfirmed;
+            Books = books;
         }
     }
-}
 
+    public record BookDto(
+        Guid BookId,
+        string BookTitle,
+        bool IsInStock
+    );
+}

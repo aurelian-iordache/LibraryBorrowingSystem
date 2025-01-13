@@ -1,3 +1,5 @@
+using CommunicationShared;
+
 namespace OrdersManagement.Application.Dtos;
 
 public record CreateBookOrderDto(
@@ -14,12 +16,6 @@ public record CreateBookOrderDto(
     string Country,
     string PostalCode,
     DateTime? EstimatedDeliveryDate,
-    bool OrderConfirmed,
-    List<OrderItemDTO> Items,
+    List<BookDto> Books,
     string Notes
-);
-public record OrderItemDTO(
-    Guid ProductId,
-    string ProductName,
-    bool IsInStock
 );

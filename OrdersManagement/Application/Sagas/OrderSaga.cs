@@ -36,8 +36,12 @@ public class OrderSaga: MassTransitStateMachine<OrderSagaState>
             When(OrderCreated)
                 .Then(ctx =>
                 {
+                    //check if all the books are available in the inventory
+                    Console.WriteLine($"Check if there is any book missing from the inventory");
+                    var orderCanBeConfirmed = ctx.Message.Books.All(b => b.IsInStock);
+
                     ctx.Saga.OrderCreatedDate = ctx.Message.OrderDate;
-                    ctx.Saga.OrderConfirmed = ctx.Message.OrderConfirmed;
+                    ctx.Saga.OrderConfirmed = orderCanBeConfirmed;
                 })
                 .ThenAsync(ctx=>Console.Out.WriteAsync("Order Created"))
                 .TransitionTo(Created)

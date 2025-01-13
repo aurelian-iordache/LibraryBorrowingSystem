@@ -59,7 +59,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapPost("/orders", async (CreateBookOrderDto newOrder, IPublishEndpoint publishEndpoint) =>
 {
-    var orderCreatedEvent = new BookOrderCreatedEvent(newOrder.OrderId, newOrder.CustomerId, newOrder.CustomerName, DateTime.UtcNow, newOrder.Status, newOrder.OrderConfirmed);
+    var orderCreatedEvent = new BookOrderCreatedEvent(newOrder.OrderId, newOrder.CustomerId, newOrder.CustomerName, DateTime.UtcNow, newOrder.Status, newOrder.Books);
     await publishEndpoint.Publish(orderCreatedEvent);
     return Results.Created($"/orders/{newOrder.OrderId}", newOrder);
 });
