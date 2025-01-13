@@ -1,35 +1,36 @@
 using MassTransit;
+using CustomerService.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Add MassTransit and RabbitMQ configuration
 builder.Services.AddMassTransit(x =>
 {
-    // Configure RabbitMQ
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq", h =>
+        // RabbitMQ host configuration
+        cfg.Host(builder.Configuration["RabbitMQ:HostName"], "/", h =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            h.Username(builder.Configuration["RabbitMQ:UserName"]);
+            h.Password(builder.Configuration["RabbitMQ:Password"]);
         });
 
-        cfg.ConfigureEndpoints(context);
+        // Bind consumers to specific queues
+        cfg.ReceiveEndpoint("order-confirmed-queue", e =>
+        {
+            e.Consumer<OrderConfirmedConsumer>(context);
+        });
+
+        cfg.ReceiveEndpoint("order-denied-queue", e =>
+        {
+            e.Consumer<OrderDeniedConsumer>(context);
+        });
     });
 });
 
-// Add Swagger for API documentation
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddMassTransitHostedService();
 
 var app = builder.Build();
+app.UseRouting();
 
-// Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
 app.Run();
