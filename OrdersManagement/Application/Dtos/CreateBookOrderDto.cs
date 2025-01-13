@@ -3,7 +3,7 @@ namespace OrdersManagement.Application.Dtos;
 public record CreateBookOrderDto(
     Guid OrderId,
     DateTime OrderDate,
-    string Status, // "Pending", "Confirmed", "Cancelled"
+    string Status, // "Created", "Checked", "Confirmed", "Cancelled", "Final"
     Guid CustomerId,
     string CustomerName,
     string CustomerEmail,
@@ -20,5 +20,6 @@ public record CreateBookOrderDto(
 );
 public record OrderItemDTO(
     Guid ProductId,
-    string ProductName
+    string ProductName,
+    bool IsInStock
 );

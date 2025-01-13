@@ -37,6 +37,7 @@ public class OrderSaga: MassTransitStateMachine<OrderSagaState>
                 .Then(ctx =>
                 {
                     ctx.Saga.OrderCreatedDate = ctx.Message.OrderDate;
+                    ctx.Saga.OrderConfirmed = ctx.Message.OrderConfirmed;
                 })
                 .ThenAsync(ctx=>Console.Out.WriteAsync("Order Created"))
                 .TransitionTo(Created)
@@ -58,14 +59,26 @@ public class OrderSaga: MassTransitStateMachine<OrderSagaState>
 
         During(Checked,
             When(InventoryChecked)
-                .Then(ctx =>
-                {
-                    ctx.Saga.OrderProcessedDate = DateTime.UtcNow;
-                })
-                .ThenAsync(ctx => Console.Out.WriteAsync("Order Confirmed"))
-                .TransitionTo(Confirmed));
-
-        // remove it from storage
-        //SetCompletedWhenFinalized();
+                .IfElse(ctx => ctx.Saga.OrderConfirmed,
+                    thenClause => thenClause
+                        .ThenAsync(ctx => Console.Out.WriteLineAsync("Order Confirmed"))
+                        .TransitionTo(Confirmed)
+                        .Then(ctx =>
+                        {
+                            ctx.Saga.OrderProcessedDate = DateTime.UtcNow;
+                        })
+                        .ThenAsync(ctx => Console.Out.WriteLineAsync("Transitioning to Finalized"))
+                        .Finalize(),
+                    elseClause => elseClause
+                        .ThenAsync(ctx => Console.Out.WriteLineAsync("Order Canceled"))
+                        .TransitionTo(Canceled)
+                        .Then(ctx =>
+                        {
+                            ctx.Saga.OrderProcessedDate = DateTime.UtcNow;
+                        })
+                        .ThenAsync(ctx => Console.Out.WriteLineAsync("Transitioning to Finalized"))
+                        .Finalize()
+                )
+        );
     }
 }
