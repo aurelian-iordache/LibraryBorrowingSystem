@@ -4,10 +4,10 @@
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
-    <ProjectGuid>d4269503-8e96-4546-8eb2-6e237af4eb28</ProjectGuid>
+    <ProjectGuid>20fd105a-1495-47a8-9a14-ff89c8569491</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>bookinventoryservice</DockerServiceName>
+    <DockerServiceName>ordersmanagement</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
@@ -15,5 +15,6 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="init.sql" />
   </ItemGroup>
 </Project>

@@ -3,15 +3,10 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
-      "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "order-service",
-      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
       "serviceActions": {
-        "order-service": "StartDebugging",
-        "customer-service": "StartDebugging",
-        "book-inventory-service": "StartDebugging",
-        "rabbitmq": "StartWithoutDebugging",
-        "sqlserver": "StartWithoutDebugging"
+        "borrowingmanagement": "StartDebugging",
+        "inventorymanagement": "StartDebugging",
+        "ordersmanagement": "StartDebugging"
       }
     }
   }
