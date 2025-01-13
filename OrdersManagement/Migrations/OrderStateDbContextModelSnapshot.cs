@@ -32,6 +32,9 @@ namespace OrdersManagement.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
+                    b.Property<bool>("OrderConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("OrderCreatedDate")
                         .HasColumnType("datetime2");
 

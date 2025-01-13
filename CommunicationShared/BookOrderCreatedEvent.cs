@@ -5,5 +5,6 @@ public record BookOrderCreatedEvent(
     Guid CustomerId,
     string CustomerName,
     DateTime OrderDate,
-    string Status
+    string Status,
+    bool OrderConfirmed
 );

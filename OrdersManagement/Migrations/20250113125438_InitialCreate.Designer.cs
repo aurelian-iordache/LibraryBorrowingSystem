@@ -12,7 +12,7 @@ using OrdersManagement.Database;
 namespace OrdersManagement.Migrations
 {
     [DbContext(typeof(OrderStateDbContext))]
-    [Migration("20250107230828_InitialCreate")]
+    [Migration("20250113125438_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -34,6 +34,9 @@ namespace OrdersManagement.Migrations
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
+
+                    b.Property<bool>("OrderConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("OrderCreatedDate")
                         .HasColumnType("datetime2");
