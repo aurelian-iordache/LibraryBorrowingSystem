@@ -19,7 +19,7 @@ namespace OrdersManagement.Migrations
                     CurrentState = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     OrderCreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OrderProcessedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrderConfirmed = table.Column<bool>(type: "bit", nullable: false)
+                    AllBooksInStock = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

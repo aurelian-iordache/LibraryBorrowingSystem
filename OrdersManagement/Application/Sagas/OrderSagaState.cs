@@ -8,5 +8,5 @@ public class OrderSagaState: SagaStateMachineInstance
     public string CurrentState { get; set; }
     public DateTime OrderCreatedDate { get; set; }
     public DateTime OrderProcessedDate { get; set; }
-    public bool OrderConfirmed { get; set; }
+    public bool AllBooksInStock { get; set; }
 }

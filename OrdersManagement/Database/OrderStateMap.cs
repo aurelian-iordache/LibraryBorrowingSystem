@@ -13,6 +13,6 @@ public class OrderStateMap : SagaClassMap<OrderSagaState>
         entity.Property(x => x.CorrelationId);
         entity.Property(x => x.OrderCreatedDate);
         entity.Property(x => x.OrderProcessedDate);
-        entity.Property(x => x.OrderConfirmed);
+        entity.Property(x => x.AllBooksInStock);
     }
 }

@@ -36,16 +36,16 @@ public class OrderSaga: MassTransitStateMachine<OrderSagaState>
             When(OrderCreated)
                 .Then(ctx =>
                 {
-                    //check if all the books are available in the inventory
+                    //check if all the books are available in the inventory, if not then the order cannot be confirmed (it will be cancelled)
                     Console.WriteLine($"Check if there is any book missing from the inventory");
-                    var orderCanBeConfirmed = ctx.Message.Books.All(b => b.IsInStock);
+                    var allBooksInStock = ctx.Message.Books.All(b => b.IsInStock);
 
                     ctx.Saga.OrderCreatedDate = ctx.Message.OrderDate;
-                    ctx.Saga.OrderConfirmed = orderCanBeConfirmed;
+                    ctx.Saga.AllBooksInStock = allBooksInStock;
                 })
                 .ThenAsync(ctx=>Console.Out.WriteAsync("Order Created"))
                 .TransitionTo(Created)
-                .Publish(ctx => new BookInventoryCheckEvent(ctx.Saga.CorrelationId, Guid.NewGuid(), ctx.Saga.OrderConfirmed))
+                .Publish(ctx => new BookInventoryCheckEvent(ctx.Saga.CorrelationId, Guid.NewGuid(), ctx.Saga.AllBooksInStock))
         );
         
         
@@ -63,16 +63,14 @@ public class OrderSaga: MassTransitStateMachine<OrderSagaState>
 
         During(Checked,
             When(InventoryChecked)
-                .IfElse(ctx => ctx.Saga.OrderConfirmed,
+                .IfElse(ctx => ctx.Saga.AllBooksInStock,
                     thenClause => thenClause
                         .ThenAsync(ctx => Console.Out.WriteLineAsync("Order Confirmed"))
                         .TransitionTo(Confirmed)
                         .Then(ctx =>
                         {
                             ctx.Saga.OrderProcessedDate = DateTime.UtcNow;
-                        })
-                        .ThenAsync(ctx => Console.Out.WriteLineAsync("Transitioning to Finalized"))
-                        .Finalize(),
+                        }),
                     elseClause => elseClause
                         .ThenAsync(ctx => Console.Out.WriteLineAsync("Order Canceled"))
                         .TransitionTo(Canceled)
@@ -80,8 +78,6 @@ public class OrderSaga: MassTransitStateMachine<OrderSagaState>
                         {
                             ctx.Saga.OrderProcessedDate = DateTime.UtcNow;
                         })
-                        .ThenAsync(ctx => Console.Out.WriteLineAsync("Transitioning to Finalized"))
-                        .Finalize()
                 )
         );
     }
